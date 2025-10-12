@@ -1,9 +1,18 @@
-import React from "react";
+// src/App.jsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import BookDetailPage from './pages/BookDetailPage';
 
-export default function App() {
+const App = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <h1 className="text-3xl font-bold">🎬 Movie Database - Capstone Starter</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/book/*" element={<BookDetailPage />} />
+      </Routes>
+    </Router>
   );
-}
+};
+
+export default App;
