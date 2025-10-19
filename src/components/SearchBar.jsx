@@ -1,51 +1,26 @@
-// src/components/SearchBar.jsx
-import React, { useState } from 'react';
+import React from "react";
+import { Search, Loader } from "lucide-react";
 
-const SearchBar = ({ onSearch }) => {
-  const [query, setQuery] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!query.trim()) return;
-    onSearch(query.trim());
-  };
-
+export default function SearchBar({ searchTerm, onSearchChange, isLoading }) {
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full max-w-2xl mx-auto px-4 py-6"
-      aria-label="Search for books"
-    >
-      <label htmlFor="search-input" className="sr-only">
-        Search books by title, author, or keyword
-      </label>
-      <div className="relative">
+    <div className="w-full max-w-4xl mx-auto mb-6">
+      <div className="relative shadow-2xl rounded-full">
         <input
-          id="search-input"
           type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search books by title, author, or keyword..."
-          className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-gray-800 dark:text-white dark:bg-gray-800 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500"
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search books by title or author..."
+          className="w-full py-4 pl-14 pr-6 text-lg rounded-full border-2 border-fuchsia-300 focus:border-purple-500 outline-none transition duration-200 dark:bg-gray-800 dark:text-white dark:border-purple-600 dark:focus:border-fuchsia-400 shadow-inner"
+          disabled={isLoading}
         />
-        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18.5a7.5 7.5 0 006.15-3.85z"
-            />
-          </svg>
+        <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+          {isLoading ? (
+            <Loader size={24} className="animate-spin text-purple-500" />
+          ) : (
+            <Search size={24} className="text-fuchsia-500" />
+          )}
         </div>
       </div>
-    </form>
+    </div>
   );
-};
-
-export default SearchBar;
+}
