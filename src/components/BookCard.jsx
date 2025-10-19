@@ -1,41 +1,48 @@
-// src/components/BookCard.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { getCoverUrl } from "../hooks/useDebounce";
 
-const BookCard = ({ book }) => {
-  const {
-    title,
-    author_name,
-    cover_i,
-    publisher,
-    key,
-  } = book;
-
-  const coverUrl = cover_i
-    ? `https://covers.openlibrary.org/b/id/${cover_i}-M.jpg`
-    : 'https://via.placeholder.com/150x220?text=No+Cover';
+export default function BookCard({ book, onSelect }) {
+  const authors = book.author_name?.join(", ") || "Unknown Author";
+  const coverUrl = getCoverUrl(book.cover_i);
+  const subjectTag = book.subject?.[0] || "General";
 
   return (
-    <Link to={`/book${key}`} className="transition-transform hover:scale-105">
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden">
+    <div
+      onClick={() => onSelect(book)}
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden border border-fuchsia-200/50 dark:border-purple-700 flex flex-col h-full group"
+    >
+      <div className="flex-shrink-0 h-52 bg-fuchsia-50 dark:bg-gray-700/50 flex items-center justify-center p-4 relative">
         <img
           src={coverUrl}
-          alt={title}
-          className="w-full h-60 object-cover"
+          alt={`Cover of ${book.title}`}
+          className="w-32 h-44 object-cover rounded shadow-lg transition-transform duration-500 group-hover:scale-105"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = getCoverUrl(null);
+          }}
         />
-        <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white truncate">{title}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            {author_name?.[0] || 'Unknown Author'}
-          </p>
-          <p className="text-xs text-gray-400 mt-1">
-            {publisher?.[0] || 'Unknown Publisher'}
+        <span className="absolute top-3 right-3 px-3 py-1 text-xs font-bold text-purple-800 bg-purple-200 rounded-full dark:text-fuchsia-200 dark:bg-fuchsia-700/70 shadow">
+          {subjectTag}
+        </span>
+      </div>
+      <div className="p-4 flex-1 flex flex-col justify-between">
+        <div>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 mb-1">
+            {book.title}
+          </h3>
+          <p className="text-sm text-purple-600 dark:text-purple-400 font-medium line-clamp-1">
+            {authors}
           </p>
         </div>
+        <div className="mt-3">
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            {book.first_publish_year || "N/A"}
+          </span>
+          <div className="mt-2 w-full text-center text-sm font-semibold text-fuchsia-600 dark:text-fuchsia-400 transition">
+            View Details
+          </div>
+        </div>
       </div>
-    </Link>
+    </div>
   );
-};
-
-export default BookCard;
-
+}
